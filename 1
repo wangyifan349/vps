@@ -1,4 +1,9 @@
 apt update
+apt remove apache2 -y
+apt install nginx -y
+rm /usr/share/nginx/html/*
+echo  "服务器维护中">/usr/share/nginx/html/index.html
+service nginx stop
 apt install vim -y
 apt install curl -y
 apt install python3-pip -y
