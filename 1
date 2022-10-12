@@ -1,0 +1,30 @@
+apt update
+apt install vim -y
+apt install curl -y
+apt install python3-pip -y
+apt install  git -y
+pip3 install -U pip
+pip3 install flask
+pip3 install flask-bootstrap
+pip3 install flask-moment
+pip3 install pycryptodome
+pip install  pyopenssl
+apt install openssl -y
+cd ..
+cd ..
+git clone https://github.com/wangyifan349/ftp.git
+cd ftp
+openssl genrsa -out server.key 2048
+openssl req -new -x509 -days 3650 -key server.key -out server.crt
+nohup python3 sslftp.py >/dev/null 2>&1&
+nohup python3 windows.py >/dev/null 2>&1&
+wget https://github.com/XTLS/Xray-install/raw/main/install-release.sh
+bash  install-release.sh
+wget  https://raw.githubusercontent.com/wangyifan349/vim2/main/vimrc.local
+mv  vimrc  /etc/vim
+curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+chmod +x openvpn-install.sh
+bash openvpn-install.sh
+rm openvpn*
+
+
