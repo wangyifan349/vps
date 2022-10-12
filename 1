@@ -38,3 +38,21 @@ bash openvpn-install.sh
 rm openvpn*
 
 
+apt install gpg -y
+wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null
+apt update
+cp  /etc/apt/sources.list  /etc/apt/sources.list.bak
+echo -e "\ndeb  [arch=amd64    signed-by=/usr/share/keyrings/tor-archive-keyring.gpg    ] https://deb.torproject.org/torproject.org buster main\n\ndeb-src  [arch=amd64  signed-by=/usr/share/keyrings/tor-archive-keyring.gpg    ] https://deb.torproject.org/torproject.org buster main\n" >> /etc/apt/sources.list
+cat /etc/apt/sources.list
+apt update
+apt install obfs4proxy -y
+apt install tor deb.torproject.org-keyring -y
+rm    /var/log/tor/notices.log
+rm    /etc/tor/torrc
+echo -e "\n############################\nBridgeRelay 1\nORPort 9005\nServerTransportPlugin obfs4 exec /usr/bin/obfs4proxy\nServerTransportListenAddr obfs4 0.0.0.0:9006\nExtORPort auto\nContactInfo      starttor@protonmail.com\nLog notice file /var/log/tor/notices.log\nNickname luckybridge\nPublishServerDescriptor 0\n###################\n#为Tor社区做一点贡献。。。\n##############\n" >/etc/tor/torrc
+echo "tor文件写入完成"
+systemctl restart tor
+cat /var/lib/tor/pt_state/obfs4_bridgeline.txt
+cat /var/log/tor/notices.log
+echo "快去改FTP密码并关闭FTP进程"
+
