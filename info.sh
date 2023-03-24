@@ -23,3 +23,7 @@ free -h
 echo "CPU 信息："
 lscpu | grep "型号名称"
 lscpu | grep "体系结构"
+
+#输出结果为 KVM 或者 Bochs，则表示当前系统正在运行在 KVM 虚拟机或 Bochs 模拟器中。如果输出结果为空或是其他值，则表示当前系统没有运行在 KVM 环境中。
+cat /sys/class/dmi/id/product_name
+dmidecode -s system-product-name
