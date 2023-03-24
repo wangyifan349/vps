@@ -1,4 +1,5 @@
 #!/bin/bash
+#用于debian10buster搭建时的简便优化使用。没有具体用途。仅仅优化源、dns解析、安装php环境。
 sudo echo -e "[Resolve]\nDNS=1.1.1.1\nDNSOverTLS=yes">/etc/systemd/resolved.conf
 systemctl restart systemd-resolved.service
 systemd-resolve --status | grep 'DNS Servers'
