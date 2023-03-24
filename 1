@@ -1,1 +1,70 @@
+#!/bin/bash
+sudo echo -e "[Resolve]\nDNS=1.1.1.1\nDNSOverTLS=yes">/etc/systemd/resolved.conf
+systemctl restart systemd-resolved.service
+systemd-resolve --status | grep 'DNS Servers'
+# 将debian源设置为默认源
+cat <<EOF > /etc/apt/sources.list
+deb http://deb.debian.org/debian buster main contrib non-free
+deb-src http://deb.debian.org/debian buster main contrib non-free
+deb http://deb.debian.org/debian buster-updates main contrib non-free
+deb-src http://deb.debian.org/debian buster-updates main contrib non-free
+deb http://deb.debian.org/debian buster-backports main contrib non-free
+deb-src http://deb.debian.org/debian buster-backports main contrib non-free
+deb http://security.debian.org/debian-security/ buster/updates main contrib non-free
+deb-src http://security.debian.org/debian-security/ buster/updates main contrib non-free
+EOF
 
+# 更新源并安装php 7.4及其相关扩展和依赖包
+apt-get update
+apt-get install -y php7.4 php7.4-fpm php7.4-mysql php7.4-curl php7.4-gd php7.4-mbstring php7.4-xml php7.4-zip
+
+# 启用php-fpm
+systemctl enable php7.4-fpm.service
+
+# 配置php7.4-fpm
+sed -i 's/^;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.4/fpm/php.ini
+sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 50M/' /etc/php/7.4/fpm/php.ini
+sed -i 's/^post_max_size = .*/post_max_size = 50M/' /etc/php/7.4/fpm/php.ini
+
+# 重启php7.4-fpm
+systemctl restart php7.4-fpm.service
+
+# 安装nginx
+apt-get install -y nginx
+
+# 配置nginx
+cat <<EOF > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+    
+    location /test.php {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+    }
+}
+EOF
+
+# 重启nginx
+systemctl restart nginx.service
+
+# 创建测试php页面
+echo "<?php phpinfo();" > /var/www/html/test.php
