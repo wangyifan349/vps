@@ -140,3 +140,51 @@ systemctl restart nginx.service
 
 # 创建测试php页面
 echo "<?php phpinfo();" > /var/www/html/test.php
+
+# 检测操作系统版本
+if [[ -f /etc/debian_version && $(grep "buster/sid" /etc/debian_version) ]]; then
+    echo "Debian 10"
+    codename="buster"
+elif [[ -f /etc/debian_version && $(grep "bullseye" /etc/debian_version) ]]; then
+    echo "Debian 11"
+    codename="bullseye"
+else
+    echo "不支持的操作系统版本"
+    exit 1
+fi
+
+# 将Tor仓库添加到APT源列表
+sudo bash -c "cat <<EOF > /etc/apt/sources.list.d/tor.list
+deb [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org $codename main
+deb-src [signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org $codename main
+EOF"
+
+# 下载并安装Tor的GPG密钥
+wget -O- https://deb.torproject.org/torproject.org/\
+A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc \
+| gpg --dearmor \
+| tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null
+
+# 更新源并安装Tor
+sudo apt-get update
+apt install tor deb.torproject.org-keyring
+
+# 检查obfs4proxy是否已安装
+if ! command -v obfs4proxy &>/dev/null; then
+    echo "obfs4proxy未安装，请先安装obfs4proxy。"
+    exit 1
+fi
+
+# 获取obfs4proxy的网桥信息
+bridge_info=$(obfs4proxy -version | grep "Bridge" | awk '{print $3}')
+
+# 检查是否有网桥信息
+if [[ -z "$bridge_info" ]]; then
+    echo "没有配置obfs4代理的网桥。"
+else
+    echo "obfs4代理的网桥信息："
+    echo "$bridge_info"
+fi
+
+
+
