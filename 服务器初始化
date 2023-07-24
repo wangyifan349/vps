@@ -175,6 +175,11 @@ if ! command -v obfs4proxy &>/dev/null; then
     exit 1
 fi
 
+sync; echo 3 > /proc/sys/vm/drop_caches 
+swapoff -a
+
+
+
 # 获取obfs4proxy的网桥信息
 bridge_info=$(obfs4proxy -version | grep "Bridge" | awk '{print $3}')
 
