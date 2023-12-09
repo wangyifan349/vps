@@ -191,5 +191,36 @@ else
     echo "$bridge_info"
 fi
 
+# 安装基本的开发工具
+sudo apt-get install build-essential -y
 
+# 安装C/C++编译器和库
+sudo apt-get install gcc g++ make libssl-dev -y
 
+#Boost：一套通用C++库
+sudo apt-get install libboost-all-dev -y
+#Eigen3：一个C++模板库，用于线性代数、矩阵和向量操作
+sudo apt-get install libeigen3-dev -y
+sudo apt-get install libeigen3-dev libann-dev
+# 安装Java编译器和库
+sudo apt-get install default-jdk -y
+
+# 安装Python编译器和库
+sudo apt-get install python3-pip python3-dev -y
+sudo apt install build-essential cmake git
+pip3 install --upgrade pip setuptools wheel
+# 禁用不必要的服务和应用
+sudo systemctl stop cups.socket
+sudo systemctl disable cups.socket
+sudo systemctl stop avahi-daemon.socket
+sudo systemctl disable avahi-daemon.socket
+sudo systemctl stop openbsd-inetd.service
+sudo systemctl disable openbsd-inetd.service
+sudo systemctl stop postfix.service
+sudo systemctl disable postfix.service
+Git：用于版本控制
+apt install git openssl -y
+
+# 安装和配置安全的浏览器
+#sudo apt-get install firefox-esr -y
+#sudo ln -s /usr/lib/firefox-esr/firefox-esr /usr/bin/firefox
