@@ -11,6 +11,7 @@ warp-cli set-mode proxy
 warp-cli set-proxy-port 5000
 #设置代理模式和监听端口5000
 warp-cli connect
+warp-cli enable-always-on#自动永久开启
 ###########################cloudflare-warp安装启用##########################
 wget https://github.com/XTLS/Xray-install/raw/main/install-release.sh
 bash ./install-release.sh
@@ -36,12 +37,10 @@ pip3 install pycryptodome  pyopenssl  pyftpdlib
 apt install openssl
 #########################解决一下证书问题#######################
 certbot certonly --standalone --rsa-key-size 4096 -d  www.aiary.xyz
-cp /etc/letsencrypt/live/www.aiary.xyz/fullchain.pem /usr/local/etc/xray/
-cp /etc/letsencrypt/live/www.aiary.xyz/privkey.pem /usr/local/etc/xray/
-cp /etc/letsencrypt/live/www.aiary.xyz/fullchain.pem /ftp/
-cp /etc/letsencrypt/live/www.aiary.xyz/privkey.pem /ftp/
-cp /etc/letsencrypt/live/www.aiary.xyz/fullchain.pem /etc/nginx/conf.d/
-cp /etc/letsencrypt/live/www.aiary.xyz/privkey.pem /etc/nginx/conf.d/
+cp /etc/letsencrypt/live/www.aiary.xyz/*.pem /usr/local/etc/xray/
+cp /etc/letsencrypt/live/www.aiary.xyz/*.pem  /ftp/
+cp /etc/letsencrypt/live/www.aiary.xyz/*.pem /etc/nginx/conf.d/
+cp /etc/letsencrypt/live/www.aiary.xyz/*.pem /etc/nginx/conf.d/
 chmod 400 /ftp/*.pem
 chmod 400 /usr/local/etc/xray/*.pem
 #########################解决一下证书问题#######################
@@ -54,3 +53,32 @@ systemctl disable snapd
 #######################################################################
 
 
+##############################
+{
+      "protocol": "socks",
+      "settings": {
+         "servers": [{
+            "address": "127.0.0.1",
+            "port": 10086
+         }]
+      },
+      "tag": "warp"
+}
+#######################################
+      {
+        "type": "field",
+        "outboundTag": "warp",
+        "domain": [
+          "geosite:cn"
+        ],
+        "enabled": true
+      },
+      {
+        "type": "field",
+        "outboundTag": "warp",
+        "ip": [
+          "geoip:cn"
+        ],
+        "enabled": true
+      }
+##########################################将国内流量重定向给cloudflare-warp###########################
