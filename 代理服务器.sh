@@ -34,6 +34,23 @@ apt install python3-pip
 pip3 install -U pip 
 pip3 install pycryptodome  pyopenssl  pyftpdlib
 apt install openssl
+#########################解决一下证书问题#######################
+certbot certonly --standalone --rsa-key-size 4096 -d  www.aiary.xyz
+cp /etc/letsencrypt/live/www.aiary.xyz/fullchain.pem /usr/local/etc/xray/
+cp /etc/letsencrypt/live/www.aiary.xyz/privkey.pem /usr/local/etc/xray/
+cp /etc/letsencrypt/live/www.aiary.xyz/fullchain.pem /ftp/
+cp /etc/letsencrypt/live/www.aiary.xyz/privkey.pem /ftp/
+cp /etc/letsencrypt/live/www.aiary.xyz/fullchain.pem /etc/nginx/conf.d/
+cp /etc/letsencrypt/live/www.aiary.xyz/privkey.pem /etc/nginx/conf.d/
+chmod 400 /ftp/*.pem
+chmod 400 /usr/local/etc/xray/*.pem
+#########################解决一下证书问题#######################
+systemctl stop snapd
+systemctl disable snapd
+
+   
+   
+
 #######################################################################
 
 
