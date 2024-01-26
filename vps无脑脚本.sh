@@ -40,6 +40,13 @@ sudo sed -i "s/pm.min_spare_servers = .*/pm.min_spare_servers = $MIN_SPARE_SERVE
 sudo sed -i "s/pm.max_spare_servers = .*/pm.max_spare_servers = $MAX_SPARE_SERVERS/" /etc/php/7.4/fpm/pool.d/www.conf
 
 sudo apt install php8.1 php8.1-fpm
+
+
+sudo apt install -y php8.1 php8.1-fpm php8.1-mysql php8.1-xml php8.1-mbstring php8.1-curl php8.1-zip
+
+
+
+
 sudo systemctl start php8.1-fpm
 sudo systemctl enable php8.1-fpm
 sudo cp /etc/php/8.1/fpm/php.ini /etc/php/8.1/fpm/php.ini.bak
