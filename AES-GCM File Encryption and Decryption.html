@@ -97,36 +97,37 @@
                 download(new Blob([encryptedDataWithIv]), filename + ".encrypted");
             } catch (e) {
                 console.error(e);
-                alert('加密失败。');
+                alert('加密失败：' + e.message);
             }
         }
 
-        // 解密数据并准备下载
-        async function decryptAndDownload(arrayBuffer, filename, password, nonce) {
-            try {
-                // 导入密码作为密码密钥
-                const key = await importPasswordAsKey(password);
+// 解密数据并准备下载
+async function decryptAndDownload(arrayBuffer, filename, password, nonce) {
+    try {
+        // 导入密码作为密码密钥
+        const key = await importPasswordAsKey(password);
 
-                // 将Nonce (IV) 转换为Uint8Array
-                const iv = new TextEncoder().encode(nonce);
+        // 将Nonce (IV) 转换为Uint8Array
+        const iv = new TextEncoder().encode(nonce);
 
-                // 使用AES-GCM算法解密数据
-                const decrypted = await window.crypto.subtle.decrypt(
-                    {
-                        name: "AES-GCM",
-                        iv: iv
-                    },
-                    key,
-                    arrayBuffer
-                );
+        // 使用AES-GCM算法解密数据
+        const decrypted = await window.crypto.subtle.decrypt(
+            {
+                name: "AES-GCM",
+                iv: iv
+            },
+            key,
+            arrayBuffer
+        );
 
-                // 触发下载解密后的文件
-                download(new Blob([decrypted]), filename.replace(".encrypted", ""));
-            } catch (e) {
-                console.error(e);
-                alert('解密失败。');
-            }
-        }
+        // 触发下载解密后的文件
+        download(new Blob([decrypted]), filename.replace(".encrypted", ""));
+    } catch (e) {
+        console.error("解密失败：", e);
+        alert('解密失败：' + e.message);
+    }
+}
+
 
         // 将密码字符串导入为AES-GCM密码密钥
         async function importPasswordAsKey(password) {
