@@ -1,154 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>AES-GCM File Encryption and Decryption</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES-GCM 文件加密和解密</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-    <!-- File input for users to select the file they want to encrypt/decrypt -->
-    <input type="file" id="file-input" /><br><br>
+    <div class="container mt-5">
+        <h1 class="mb-4">AES-GCM 文件加密和解密</h1>
 
-    <!-- Form for customizing AES parameters -->
-    <form id="aes-form">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <label for="nonce">Nonce (IV):</label>
-        <input type="text" id="nonce" name="nonce" required><br><br>
-    </form>
+        <!-- 文件选择器 -->
+        <input type="file" id="file-input" class="form-control mb-3" />
 
-    <!-- Buttons to trigger the encryption and decryption processes -->
-    <button onclick="encryptFile()">Encrypt and Download</button>
-    <button onclick="decryptFile()">Decrypt and Download</button>
+        <!-- 表单用于输入密码和nonce -->
+        <form id="aes-form">
+            <div class="mb-3">
+                <label for="password" class="form-label">密码：</label>
+                <input type="password" id="password" name="password" class="form-control" value="default-password" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="nonce" class="form-label">Nonce (IV)：</label>
+                <input type="text" id="nonce" name="nonce" class="form-control" value="default-nonce" required>
+            </div>
+        </form>
 
-    <script>
-        // Function to handle the file encryption
-        async function encryptFile() {
-            const fileInput = document.getElementById('file-input');
+        <!-- 加密和解密按钮 -->
+        <button onclick="encryptFile()" class="btn btn-primary me-3">加密并下载</button>
+        <button onclick="decryptFile()" class="btn btn-success">解密并下载</button>
+    </div>
+
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 处理文件加密
+        async function encryptFile() {
+            const fileInput = document.getElementById('file-input');
             const password = document.getElementById('password').value;
             const nonce = document.getElementById('nonce').value;
-            
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                // Read the file as an ArrayBuffer
-                const arrayBuffer = await file.arrayBuffer();
-                // Encrypt and trigger the download
-                encryptAndDownload(arrayBuffer, file.name, password, nonce);
-            } else {
-                alert('Please select a file to encrypt.');
-            }
-        }
 
-        // Function to handle the file decryption
-        async function decryptFile() {
-            const fileInput = document.getElementById('file-input');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                // 读取文件为ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+                // 加密并触发下载
+                encryptAndDownload(arrayBuffer, file.name, password, nonce);
+            } else {
+                alert('请选择要加密的文件。');
+            }
+        }
+
+        // 处理文件解密
+        async function decryptFile() {
+            const fileInput = document.getElementById('file-input');
             const password = document.getElementById('password').value;
             const nonce = document.getElementById('nonce').value;
-            
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                // Read the file as an ArrayBuffer
-                const arrayBuffer = await file.arrayBuffer();
-                // Decrypt and trigger the download
-                decryptAndDownload(arrayBuffer, file.name, password, nonce);
-            } else {
-                alert('Please select a file to decrypt.');
-            }
-        }
 
-        // Function to encrypt the data and prepare it for download
-        async function encryptAndDownload(arrayBuffer, filename, password, nonce) {
-            try {
-                // Import the password as a crypto key
-                const key = await importPasswordAsKey(password);
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                // 读取文件为ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+                // 解密并触发下载
+                decryptAndDownload(arrayBuffer, file.name, password, nonce);
+            } else {
+                alert('请选择要解密的文件。');
+            }
+        }
 
-                // Convert nonce (IV) to Uint8Array
+        // 加密数据并准备下载
+        async function encryptAndDownload(arrayBuffer, filename, password, nonce) {
+            try {
+                // 导入密码作为密码密钥
+                const key = await importPasswordAsKey(password);
+
+                // 将Nonce (IV) 转换为Uint8Array
                 const iv = new TextEncoder().encode(nonce);
 
-                // Encrypt the data using AES-GCM
-                const encrypted = await window.crypto.subtle.encrypt(
-                    {
-                        name: "AES-GCM",
-                        iv: iv
-                    },
-                    key,
-                    arrayBuffer
-                );
+                // 使用AES-GCM算法加密数据
+                const encrypted = await window.crypto.subtle.encrypt(
+                    {
+                        name: "AES-GCM",
+                        iv: iv
+                    },
+                    key,
+                    arrayBuffer
+                );
 
-                // Combine the IV and the encrypted data into a single buffer
-                const encryptedDataWithIv = combineIvAndData(iv, encrypted);
+                // 将IV和加密后的数据合并成一个缓冲区
+                const encryptedDataWithIv = combineIvAndData(iv, encrypted);
 
-                // Create a blob from the buffer and trigger the download
-                download(new Blob([encryptedDataWithIv]), filename + ".encrypted");
-            } catch (e) {
-                console.error(e);
-                alert('Encryption failed.');
-            }
-        }
+                // 从缓冲区创建Blob并触发下载
+                download(new Blob([encryptedDataWithIv]), filename + ".encrypted");
+            } catch (e) {
+                console.error(e);
+                alert('加密失败。');
+            }
+        }
 
-        // Function to decrypt the data and prepare it for download
-        async function decryptAndDownload(arrayBuffer, filename, password, nonce) {
-            try {
-                // Import the password as a crypto key
-                const key = await importPasswordAsKey(password);
+        // 解密数据并准备下载
+        async function decryptAndDownload(arrayBuffer, filename, password, nonce) {
+            try {
+                // 导入密码作为密码密钥
+                const key = await importPasswordAsKey(password);
 
-                // Convert nonce (IV) to Uint8Array
+                // 将Nonce (IV) 转换为Uint8Array
                 const iv = new TextEncoder().encode(nonce);
 
-                // Decrypt the data using AES-GCM
-                const decrypted = await window.crypto.subtle.decrypt(
-                    {
-                        name: "AES-GCM",
-                        iv: iv
-                    },
-                    key,
-                    arrayBuffer
-                );
+                // 使用AES-GCM算法解密数据
+                const decrypted = await window.crypto.subtle.decrypt(
+                    {
+                        name: "AES-GCM",
+                        iv: iv
+                    },
+                    key,
+                    arrayBuffer
+                );
 
-                // Trigger the download of the decrypted file
-                download(new Blob([decrypted]), filename.replace(".encrypted", ""));
-            } catch (e) {
-                console.error(e);
-                alert('Decryption failed.');
-            }
-        }
+                // 触发下载解密后的文件
+                download(new Blob([decrypted]), filename.replace(".encrypted", ""));
+            } catch (e) {
+                console.error(e);
+                alert('解密失败。');
+            }
+        }
 
-        // Function to import a password string as an AES-GCM crypto key
-        async function importPasswordAsKey(password) {
-            return window.crypto.subtle.importKey(
-                "raw",
-                new TextEncoder().encode(password),
-                { name: "AES-GCM", length: 256 },
-                false,
-                ["encrypt", "decrypt"]
-            );
-        }
+        // 将密码字符串导入为AES-GCM密码密钥
+        async function importPasswordAsKey(password) {
+            return window.crypto.subtle.importKey(
+                "raw",
+                new TextEncoder().encode(password),
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
 
-        // Function to combine the IV and the data
-        function combineIvAndData(iv, data) {
-            const combined = new Uint8Array(iv.length + data.byteLength);
-            combined.set(iv);
-            combined.set(new Uint8Array(data), iv.length);
-            return combined;
-        }
+        // 合并IV和数据
+        function combineIvAndData(iv, data) {
+            const combined = new Uint8Array(iv.length + data.byteLength);
+            combined.set(iv);
+            combined.set(new Uint8Array(data), iv.length);
+            return combined;
+        }
 
-        // Function to create a download link and trigger a file download
-        function download(blob, filename) {
-            const url = window.URL.createObjectURL(blob);
-            const element = document.createElement('a');
-            element.href = url;
-            element.download = filename;
+        // 创建下载链接并触发文件下载
+        function download(blob, filename) {
+            const url = window.URL.createObjectURL(blob);
+            const element = document.createElement('a');
+            element.href = url;
+            element.download = filename;
 
-            // Append the link, trigger the download, and then remove the link
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+            // 添加链接，触发下载，然后移除链接
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
 
-            // Clean up the URL object
-            window.URL.revokeObjectURL(url);
-        }
-    </script>
+            // 清理URL对象
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
 
 </body>
 </html>
