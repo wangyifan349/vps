@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AES-GCM File Encryption and Decryption</title>
+</head>
+<body>
+
+    <!-- File input for users to select the file they want to encrypt/decrypt -->
+    <input type="file" id="file-input" /><br><br>
+
+    <!-- Form for customizing AES parameters -->
+    <form id="aes-form">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <label for="nonce">Nonce (IV):</label>
+        <input type="text" id="nonce" name="nonce" required><br><br>
+    </form>
+
+    <!-- Buttons to trigger the encryption and decryption processes -->
+    <button onclick="encryptFile()">Encrypt and Download</button>
+    <button onclick="decryptFile()">Decrypt and Download</button>
+
+    <script>
+        // Function to handle the file encryption
+        async function encryptFile() {
+            const fileInput = document.getElementById('file-input');
+            const password = document.getElementById('password').value;
+            const nonce = document.getElementById('nonce').value;
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                // Read the file as an ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+                // Encrypt and trigger the download
+                encryptAndDownload(arrayBuffer, file.name, password, nonce);
+            } else {
+                alert('Please select a file to encrypt.');
+            }
+        }
+
+        // Function to handle the file decryption
+        async function decryptFile() {
+            const fileInput = document.getElementById('file-input');
+            const password = document.getElementById('password').value;
+            const nonce = document.getElementById('nonce').value;
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                // Read the file as an ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+                // Decrypt and trigger the download
+                decryptAndDownload(arrayBuffer, file.name, password, nonce);
+            } else {
+                alert('Please select a file to decrypt.');
+            }
+        }
+
+        // Function to encrypt the data and prepare it for download
+        async function encryptAndDownload(arrayBuffer, filename, password, nonce) {
+            try {
+                // Import the password as a crypto key
+                const key = await importPasswordAsKey(password);
+
+                // Convert nonce (IV) to Uint8Array
+                const iv = new TextEncoder().encode(nonce);
+
+                // Encrypt the data using AES-GCM
+                const encrypted = await window.crypto.subtle.encrypt(
+                    {
+                        name: "AES-GCM",
+                        iv: iv
+                    },
+                    key,
+                    arrayBuffer
+                );
+
+                // Combine the IV and the encrypted data into a single buffer
+                const encryptedDataWithIv = combineIvAndData(iv, encrypted);
+
+                // Create a blob from the buffer and trigger the download
+                download(new Blob([encryptedDataWithIv]), filename + ".encrypted");
+            } catch (e) {
+                console.error(e);
+                alert('Encryption failed.');
+            }
+        }
+
+        // Function to decrypt the data and prepare it for download
+        async function decryptAndDownload(arrayBuffer, filename, password, nonce) {
+            try {
+                // Import the password as a crypto key
+                const key = await importPasswordAsKey(password);
+
+                // Convert nonce (IV) to Uint8Array
+                const iv = new TextEncoder().encode(nonce);
+
+                // Decrypt the data using AES-GCM
+                const decrypted = await window.crypto.subtle.decrypt(
+                    {
+                        name: "AES-GCM",
+                        iv: iv
+                    },
+                    key,
+                    arrayBuffer
+                );
+
+                // Trigger the download of the decrypted file
+                download(new Blob([decrypted]), filename.replace(".encrypted", ""));
+            } catch (e) {
+                console.error(e);
+                alert('Decryption failed.');
+            }
+        }
+
+        // Function to import a password string as an AES-GCM crypto key
+        async function importPasswordAsKey(password) {
+            return window.crypto.subtle.importKey(
+                "raw",
+                new TextEncoder().encode(password),
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        // Function to combine the IV and the data
+        function combineIvAndData(iv, data) {
+            const combined = new Uint8Array(iv.length + data.byteLength);
+            combined.set(iv);
+            combined.set(new Uint8Array(data), iv.length);
+            return combined;
+        }
+
+        // Function to create a download link and trigger a file download
+        function download(blob, filename) {
+            const url = window.URL.createObjectURL(blob);
+            const element = document.createElement('a');
+            element.href = url;
+            element.download = filename;
+
+            // Append the link, trigger the download, and then remove the link
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+
+            // Clean up the URL object
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+
+</body>
+</html>
