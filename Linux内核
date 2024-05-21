@@ -1,0 +1,119 @@
+# General setup
+#这个文件通常位于 Linux 内核源代码树的根目录下，并命名为 .config。在编译内核时，可以使用 make menuconfig 或类似的工具来配置内核，然后保存配置并生成 .config 文件。这个文件包含了编译内核时所需的所有配置信息。
+
+CONFIG_EXPERT=y                    # 开启专家模式
+CONFIG_SECURITY=y                  # 启用安全特性
+CONFIG_SECURITY_SELINUX=y          # 启用 SELinux 安全模块
+CONFIG_CC_STACKPROTECTOR_STRONG=y  # 启用强栈保护
+CONFIG_STACKPROTECTOR=y            # 启用栈保护
+CONFIG_DEFAULT_MMAP_MIN_ADDR=65536 # 设置用户空间 mmap 最小地址
+CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY=y # 强制内核保密性
+CONFIG_LOCK_DOWN_KERNEL_FORCE_INTEGRITY=y       # 强制内核完整性
+CONFIG_LOCK_DOWN_KERNEL_FORCE_NONE=y            # 禁止对内核进行修改
+
+# CPU/Task time and stats accounting
+CONFIG_TASKSTATS=y                # 启用任务统计
+CONFIG_TASK_DELAY_ACCT=y          # 启用任务延迟账户
+CONFIG_TASK_IO_ACCOUNTING=y       # 启用任务 IO 账户
+
+# Networking support
+CONFIG_NETFILTER=y                # 启用网络过滤
+CONFIG_NETFILTER_ADVANCED=y       # 启用高级网络过滤配置
+CONFIG_NETFILTER_XTABLES=y        # 启用扩展表支持
+CONFIG_NETFILTER_NETLINK=y        # 启用 Netfilter Netlink 接口
+
+# Cryptographic API
+CONFIG_CRYPTO=y                   # 启用加密 API
+CONFIG_CRYPTO_AES=y               # 启用 AES 加密算法支持
+CONFIG_CRYPTO_SHA256=y            # 启用 SHA-256 哈希算法支持
+CONFIG_CRYPTO_CRC32C=y            # 启用 CRC32C 算法支持
+CONFIG_CRYPTO_RSA=y               # 启用 RSA 加密算法支持
+
+# Virtualization
+CONFIG_VIRTUALIZATION=y           # 启用虚拟化支持
+CONFIG_KVM=y                       # 启用 KVM 虚拟化支持
+CONFIG_VIRTIO=y                    # 启用 VirtIO 驱动支持
+CONFIG_VIRTIO_PCI=y                # 启用 VirtIO PCI 设备支持
+CONFIG_VIRTIO_NET=y                # 启用 VirtIO 网络设备支持
+
+# File systems
+CONFIG_EXT4_FS=y                  # 启用 Ext4 文件系统支持
+CONFIG_XFS_FS=y                    # 启用 XFS 文件系统支持
+CONFIG_BTRFS_FS=y                  # 启用 Btrfs 文件系统支持
+
+# Device Drivers
+CONFIG_DRM=y                       # 启用直接渲染管理支持
+CONFIG_USB=y                       # 启用 USB 设备支持
+CONFIG_USB_STORAGE=y               # 启用 USB 存储支持
+CONFIG_SATA_AHCI=y                 # 启用 AHCI SATA 支持
+CONFIG_NETDEVICES=y                # 启用网络设备支持
+CONFIG_NET_ETHERNET=y              # 启用以太网设备支持
+CONFIG_HID=y                       # 启用 HID（Human Interface Device）支持
+CONFIG_X86_PLATFORM_DEVICES=y      # 启用 x86 平台设备支持
+CONFIG_SENSORS=y                   # 启用传感器支持
+
+# Power management and ACPI options
+CONFIG_ACPI=y                      # 启用 ACPI 支持
+CONFIG_CPU_FREQ=y                  # 启用 CPU 频率调节支持
+CONFIG_HIBERNATION=y               # 启用休眠支持
+CONFIG_PM_SLEEP=y                  # 启用睡眠支持
+CONFIG_PM_TRACE=y                  # 启用电源管理跟踪支持
+CONFIG_SUSPEND=y                   # 启用挂起支持
+
+# Kernel hacking
+CONFIG_DEBUG_KERNEL=y              # 启用内核调试支持
+CONFIG_DEBUG_INFO=y                # 启用调试信息
+CONFIG_MAGIC_SYSRQ=y               # 启用魔术 SysRq 键支持
+CONFIG_SCHED_DEBUG=y               # 启用调度器调试支持
+CONFIG_DEBUG_STACKOVERFLOW=y       # 启用堆栈溢出检测支持
+CONFIG_DEBUG_BUGVERBOSE=y          # 启用更详细的调试信息
+CONFIG_KGDB=y                      # 启用 KGDB 支持
+
+# Kernel Performance Events And Counters
+CONFIG_PERF_EVENTS=y               # 启用性能事件和计数器
+CONFIG_HW_PERF_EVENTS=y            # 启用硬件性能计数器支持
+CONFIG_PERF_USE_VMALLOC=y          # 使用 vmalloc 区域进行性能计数
+
+# Kernel tracing
+CONFIG_TRACEPOINTS=y               # 启用跟踪点支持
+CONFIG_RING_BUFFER=y               # 启用
+环形缓冲区支持
+CONFIG_KPROBES=y                   # 启用内核探测支持
+CONFIG_FUNCTION_TRACER=y           # 启用函数跟踪支持
+CONFIG_EVENT_TRACING=y             # 启用事件跟踪支持
+
+# Timer subsystem
+CONFIG_HIGH_RES_TIMERS=y           # 启用高分辨率定时器支持
+CONFIG_PREEMPT_NONE=y              # 关闭抢占式内核
+
+# Networking options
+CONFIG_PACKET=y                    # 启用数据包套接字支持
+CONFIG_UNIX=y                      # 启用 Unix 套接字支持
+CONFIG_INET=y                      # 启用 Internet 协议族支持
+CONFIG_IPV6=y                      # 启用 IPv6 支持
+CONFIG_NETDEVICES=y                # 启用网络设备支持
+CONFIG_NET_CORE=y                  # 启用网络核心支持
+
+# Memory management options
+CONFIG_MMU=y                       # 启用内存管理单元支持
+CONFIG_PAGE_TABLE_ISOLATION=y      # 启用页面表隔离
+CONFIG_SPLIT_PTLOCK_CPUS=4         # 页面表锁定的 CPU 数量
+
+# Security options
+CONFIG_KEYS=y                      # 启用密钥管理支持
+CONFIG_SECURITYFS=y                # 启用安全文件系统支持
+CONFIG_SECURITY_SELINUX=y          # 启用 SELinux 安全模块
+CONFIG_SECURITY_APPARMOR=y         # 启用 AppArmor 安全模块
+
+# Cryptographic API options
+CONFIG_CRYPTO=y                    # 启用加密 API
+CONFIG_CRYPTO_AES=y                # 启用 AES 加密算法支持
+CONFIG_CRYPTO_SHA256=y             # 启用 SHA-256 哈希算法支持
+CONFIG_CRYPTO_CRC32C=y             # 启用 CRC32C 算法支持
+
+# Virtualization options
+CONFIG_VIRTUALIZATION=y           # 启用虚拟化支持
+CONFIG_KVM=y                      # 启用 KVM 虚拟化支持
+CONFIG_VIRTIO=y                   # 启用 VirtIO 驱动支持
+CONFIG_VIRTIO_PCI=y               # 启用 VirtIO PCI 设备支持
+CONFIG_VIRTIO_NET=y               # 启用 VirtIO 网络设备支持
