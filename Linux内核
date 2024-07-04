@@ -117,3 +117,192 @@ CONFIG_KVM=y                      # 启用 KVM 虚拟化支持
 CONFIG_VIRTIO=y                   # 启用 VirtIO 驱动支持
 CONFIG_VIRTIO_PCI=y               # 启用 VirtIO PCI 设备支持
 CONFIG_VIRTIO_NET=y               # 启用 VirtIO 网络设备支持
+
+
+
+
+
+
+
+
+
+############################################################
+# General setup
+CONFIG_EXPERT=y                    # 开启专家模式
+CONFIG_SECURITY=y                  # 启用安全特性
+CONFIG_SECURITY_SELINUX=y          # 启用 SELinux 安全模块
+CONFIG_CC_STACKPROTECTOR_STRONG=y  # 启用强栈保护
+CONFIG_STACKPROTECTOR=y            # 启用栈保护
+CONFIG_DEFAULT_MMAP_MIN_ADDR=65536 # 设置用户空间 mmap 最小地址
+CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY=y # 强制内核保密性
+CONFIG_LOCK_DOWN_KERNEL_FORCE_INTEGRITY=y       # 强制内核完整性
+CONFIG_LOCK_DOWN_KERNEL_FORCE_NONE=y            # 禁止对内核进行修改
+CONFIG_DEBUG_INFO_REDUCED=y        # 启用简化的调试信息
+CONFIG_DEBUG_FS=y                  # 启用调试文件系统
+CONFIG_DEBUG_KERNEL=y              # 启用内核调试支持
+
+# CPU/Task time and stats accounting
+CONFIG_TASKSTATS=y                # 启用任务统计
+CONFIG_TASK_DELAY_ACCT=y          # 启用任务延迟账户
+CONFIG_TASK_IO_ACCOUNTING=y       # 启用任务 IO 账户
+CONFIG_TASK_XACCT=y               # 启用任务扩展账户
+
+# Networking support
+CONFIG_NETFILTER=y                # 启用网络过滤
+CONFIG_NETFILTER_ADVANCED=y       # 启用高级网络过滤配置
+CONFIG_NETFILTER_XTABLES=y        # 启用扩展表支持
+CONFIG_NETFILTER_NETLINK=y        # 启用 Netfilter Netlink 接口
+CONFIG_NETFILTER_CONNTRACK=y      # 启用连接跟踪支持
+CONFIG_NETFILTER_XT_TARGET_LOG=y  # 启用 Netfilter 日志目标
+CONFIG_NETFILTER_XT_MATCH_STATE=y # 启用 Netfilter 状态匹配
+CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y # 启用 Netfilter 连接跟踪匹配
+
+# Cryptographic API
+CONFIG_CRYPTO=y                   # 启用加密 API
+CONFIG_CRYPTO_AES=y               # 启用 AES 加密算法支持
+CONFIG_CRYPTO_SHA256=y            # 启用 SHA-256 哈希算法支持
+CONFIG_CRYPTO_CRC32C=y            # 启用 CRC32C 算法支持
+CONFIG_CRYPTO_RSA=y               # 启用 RSA 加密算法支持
+CONFIG_CRYPTO_USER_API=y          # 启用用户空间加密 API
+CONFIG_CRYPTO_ECB=y               # 启用 ECB 模式支持
+CONFIG_CRYPTO_CBC=y               # 启用 CBC 模式支持
+CONFIG_CRYPTO_GCM=y               # 启用 GCM 模式支持
+CONFIG_CRYPTO_CHACHA20=y          # 启用 ChaCha20 加密算法支持
+CONFIG_CRYPTO_POLY1305=y          # 启用 Poly1305 消息认证码支持
+
+# Virtualization
+CONFIG_VIRTUALIZATION=y           # 启用虚拟化支持
+CONFIG_KVM=y                      # 启用 KVM 虚拟化支持
+CONFIG_VIRTIO=y                   # 启用 VirtIO 驱动支持
+CONFIG_VIRTIO_PCI=y               # 启用 VirtIO PCI 设备支持
+CONFIG_VIRTIO_NET=y               # 启用 VirtIO 网络设备支持
+CONFIG_VHOST_NET=y                # 启用虚拟主机网络支持
+CONFIG_VHOST_SCSI=y               # 启用虚拟主机 SCSI 支持
+CONFIG_VHOST_VSOCK=y              # 启用虚拟主机 vsock 支持
+
+# File systems
+CONFIG_EXT4_FS=y                  # 启用 Ext4 文件系统支持
+CONFIG_XFS_FS=y                   # 启用 XFS 文件系统支持
+CONFIG_BTRFS_FS=y                 # 启用 Btrfs 文件系统支持
+CONFIG_F2FS_FS=y                  # 启用 F2FS 文件系统支持
+CONFIG_NFS_FS=y                   # 启用 NFS 文件系统支持
+CONFIG_CIFS=y                     # 启用 CIFS 支持
+
+# Device Drivers
+CONFIG_DRM=y                      # 启用直接渲染管理支持
+CONFIG_USB=y                      # 启用 USB 设备支持
+CONFIG_USB_STORAGE=y              # 启用 USB 存储支持
+CONFIG_SATA_AHCI=y                # 启用 AHCI SATA 支持
+CONFIG_NETDEVICES=y               # 启用网络设备支持
+CONFIG_NET_ETHERNET=y             # 启用以太网设备支持
+CONFIG_HID=y                      # 启用 HID（Human Interface Device）支持
+CONFIG_X86_PLATFORM_DEVICES=y     # 启用 x86 平台设备支持
+CONFIG_SENSORS=y                  # 启用传感器支持
+CONFIG_I2C=y                      # 启用 I2C 支持
+CONFIG_I2C_BOARDINFO=y            # 启用 I2C 板级信息
+CONFIG_SPI=y                      # 启用 SPI 支持
+CONFIG_SPI_MASTER=y               # 启用 SPI 主机支持
+CONFIG_GPIO=y                     # 启用 GPIO 支持
+CONFIG_GPIO_SYSFS=y               # 启用 GPIO sysfs 支持
+CONFIG_WATCHDOG=y                 # 启用看门狗支持
+
+# Power management and ACPI options
+CONFIG_ACPI=y                     # 启用 ACPI 支持
+CONFIG_CPU_FREQ=y                 # 启用 CPU 频率调节支持
+CONFIG_HIBERNATION=y              # 启用休眠支持
+CONFIG_PM_SLEEP=y                 # 启用睡眠支持
+CONFIG_PM_TRACE=y                 # 启用电源管理跟踪支持
+CONFIG_SUSPEND=y                  # 启用挂起支持
+CONFIG_INTEL_IDLE=y               # 启用 Intel 空闲驱动
+CONFIG_ACPI_PROCESSOR=y           # 启用 ACPI 处理器支持
+CONFIG_ACPI_THERMAL=y             # 启用 ACPI 热管理支持
+
+# Kernel hacking
+CONFIG_DEBUG_KERNEL=y             # 启用内核调试支持
+CONFIG_DEBUG_INFO=y               # 启用调试信息
+CONFIG_MAGIC_SYSRQ=y              # 启用魔术 SysRq 键支持
+CONFIG_SCHED_DEBUG=y              # 启用调度器调试支持
+CONFIG_DEBUG_STACKOVERFLOW=y      # 启用堆栈溢出检测支持
+CONFIG_DEBUG_BUGVERBOSE=y         # 启用更详细的调试信息
+CONFIG_KGDB=y                     # 启用 KGDB 支持
+CONFIG_DEBUG_PREEMPT=y            # 启用抢占调试支持
+CONFIG_DEBUG_OBJECTS=y            # 启用对象调试支持
+CONFIG_DEBUG_OBJECTS_FREE=y       # 启用对象释放调试支持
+CONFIG_DEBUG_OBJECTS_TIMERS=y     # 启用定时器对象调试支持
+CONFIG_DEBUG_OBJECTS_WORK=y       # 启用工作队列对象调试支持
+
+# Kernel Performance Events And Counters
+CONFIG_PERF_EVENTS=y              # 启用性能事件和计数器
+CONFIG_HW_PERF_EVENTS=y           # 启用硬件性能计数器支持
+CONFIG_PERF_USE_VMALLOC=y         # 使用 vmalloc 区域进行性能计数
+CONFIG_PERF_EVENTS_INTEL_UNCORE=y # 启用 Intel Uncore 性能事件支持
+CONFIG_PERF_EVENTS_AMD_POWER=y    # 启用 AMD 电源性能事件支持
+
+# Kernel tracing
+CONFIG_TRACEPOINTS=y              # 启用跟踪点支持
+CONFIG_RING_BUFFER=y              # 启用环形缓冲区支持
+CONFIG_KPROBES=y                  # 启用内核探测支持
+CONFIG_FUNCTION_TRACER=y          # 启用函数跟踪支持
+CONFIG_EVENT_TRACING=y            # 启用事件跟踪支持
+CONFIG_BLK_DEV_IO_TRACE=y         # 启用块设备 IO 跟踪
+CONFIG_FTRACE=y                   # 启用函数跟踪
+CONFIG_FTRACE_SYSCALLS=y          # 启用系统调用跟踪
+
+# Timer subsystem
+CONFIG_HIGH_RES_TIMERS=y          # 启用高分辨率定时器支持
+CONFIG_PREEMPT_NONE=y             # 关闭抢占式内核
+CONFIG_NO_HZ_IDLE=y               # 启用空闲时无定时器中断
+CONFIG_HZ_1000=y                  # 设置定时器频率为 1000 Hz
+
+# Networking options
+CONFIG_PACKET=y                   # 启用数据包套接字支持
+CONFIG_UNIX=y                     # 启用 Unix 套接字支持
+CONFIG_INET=y                     # 启用 Internet 协议族支持
+CONFIG_IPV6=y                     # 启用 IPv6 支持
+CONFIG_NETDEVICES=y               # 启用网络设备支持
+CONFIG_NET_CORE=y                 # 启用网络核心支持
+CONFIG_BRIDGE=y                   # 启用桥接支持
+CONFIG_VLAN_8021Q=y               # 启用 802.1Q VLAN 支持
+CONFIG_TUN=y                      # 启用 TUN/TAP 支持
+
+# Memory management options
+CONFIG_MMU=y                      # 启用内存管理单元支持
+CONFIG_PAGE_TABLE_ISOLATION=y     # 启用页面表隔离
+CONFIG_SPLIT_PTLOCK_CPUS=4        # 页面表锁定的 CPU 数量
+CONFIG_TRANSPARENT_HUGEPAGE=y     # 启用透明大页支持
+CONFIG_CGROUPS=y                  # 启用控制组支持
+CONFIG_MEMCG=y                    # 启用内存控制组支持
+
+# Security options
+CONFIG_KEYS=y                     # 启用密钥管理支持
+CONFIG_SECURITYFS=y               # 启用安全文件系统支持
+CONFIG_SECURITY_SELINUX=y         # 启用 SELinux 安全模块
+CONFIG_SECURITY_APPARMOR=y        # 启用 AppArmor 安全模块
+CONFIG_SECURITY_SMACK=y           # 启用 SMACK 安全模块
+CONFIG_SECURITY_TOMOYO=y          # 启用 TOMOYO 安全模块
+CONFIG_SECURITY_YAMA=y            # 启用 Yama 安全模块
+
+# Cryptographic API options
+CONFIG_CRYPTO=y                   # 启用加密 API
+CONFIG_CRYPTO_AES=y               # 启用 AES 加密算法支持
+CONFIG_CRYPTO_SHA256=y            # 启用 SHA-256 哈希算法支持
+CONFIG_CRYPTO_CRC32C=y            # 启用 CRC32C 算法支持
+CONFIG_CRYPTO_DEFLATE=y           # 启用 DEFLATE 压缩算法支持
+CONFIG_CRYPTO_LZO=y               # 启用 LZO 压缩算法支持
+CONFIG_CRYPTO_LZ4=y               # 启用 LZ4 压缩算法支持
+CONFIG_CRYPTO_USER_API=y          # 启用用户空间加密 API
+CONFIG_CRYPTO_ECB=y               # 启用 ECB 模式支持
+CONFIG_CRYPTO_CBC=y               # 启用 CBC 模式支持
+CONFIG_CRYPTO_GCM=y               # 启用 GCM 模式支持
+CONFIG_CRYPTO_CHACHA20=y          # 启用 ChaCha20 加密算法支持
+CONFIG_CRYPTO_POLY1305=y          # 启用 Poly1305 消息认证码支持
+
+# Virtualization options
+CONFIG_VIRTUALIZATION=y           # 启用虚拟化支持
+CONFIG_KVM=y                      # 启用 KVM 虚拟化支持
+CONFIG_VIRTIO=y                   # 启用 VirtIO 驱动支持
+CONFIG_VIRTIO_PCI=y               # 启用 VirtIO PCI 设备支持
+CONFIG_VIRTIO_NET=y               # 启用 VirtIO 网络设备支持
+CONFIG_VHOST_NET=y                # 启用虚拟主机网络支持
+CONFIG_VHOST_SCSI=y               # 启用虚拟主机 SCSI 支持
+CONFIG_VHOST_VSOCK=y              # 启用虚拟主机 vsock 支持
