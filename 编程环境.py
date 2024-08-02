@@ -1,5 +1,30 @@
 #https://bridges.torproject.org/bridges?transport=obfs4
 
+# 获取当前Ubuntu版本代号
+UBUNTU_VERSION=$(lsb_release -sc)
+
+# 备份当前的 sources.list
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
+
+# 替换 sources.list 内容为默认的官方源
+sudo bash -c "cat > /etc/apt/sources.list << EOL
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION main restricted
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION-updates main restricted
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION universe
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION-updates universe
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION multiverse
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION-updates multiverse
+deb http://archive.ubuntu.com/ubuntu/ $UBUNTU_VERSION-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu $UBUNTU_VERSION-security main restricted
+deb http://security.ubuntu.com/ubuntu $UBUNTU_VERSION-security universe
+deb http://security.ubuntu.com/ubuntu $UBUNTU_VERSION-security multiverse
+EOL"
+
+# 更新包列表
+sudo apt update
+
+
+
 
 # 清除系统代理设置
 gsettings set org.gnome.system.proxy mode 'none'
@@ -18,19 +43,12 @@ sudo iptables -t filter -X
 
 
 
-
-
-apt install gcc
-apt install g++
-apt install python3
-apt install python3-pip
-apt install default-jdk
-apt install nodejs
-apt install npm
-npm install -g typescript
-apt install git
-
 pip install Pillow requests  opencv-python urlllib3
+
+
+# 安装必要的依赖
+sudo apt install -y apt-transport-https gnupg
+
 
 apt install build-essential cmake pkg-config libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libexpat1-dev libpgm-dev qttools5-dev-tools libhidapi-dev libusb-1.0-0-dev libprotobuf-dev protobuf-compiler libudev-dev libboost-chrono-dev libboost-date-time-dev libboost-filesystem-dev libboost-locale-dev libboost-program-options-dev libboost-regex-dev libboost-serialization-dev libboost-system-dev libboost-thread-dev python3 ccache doxygen graphviz
 
@@ -141,6 +159,18 @@ sudo systemctl enable earlyoom
 
 # 23. 设置 CPU 调度策略为性能模式
 sudo cpupower frequency-set -g performance
+
+#禁用透明大页（Transparent Huge Pages, THP）
+#透明大页有时会导致性能问题，特别是在数据库等应用中
+echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
+
+
+
+
+
+
+
+
 
 
 # 16. 禁用不必要的系统服务（根据需要自行调整）
@@ -297,3 +327,270 @@ sudo systemctl disable apt-daily.service
 sudo systemctl disable apt-daily.timer
 sudo systemctl disable apt-daily-upgrade.timer
 sudo systemctl disable apt-daily-upgrade.service
+
+
+
+#编程和编译工具
+sudo apt update && sudo apt install build-essential git vim emacs nano code gdb cmake make
+#Java、Go、Python3、Python3 pip、C语言等编程语言及其工具
+sudo apt update && sudo apt install default-jdk default-jre golang-go python3 python3-pip gcc g++
+sudo apt install git vim emacs nano curl wget htop tree unzip zip        #基本工具
+
+# 设置环境变量的代理配置
+echo "Setting up environment proxy variables..."
+echo "export http_proxy=http://127.0.0.1:10809/" >> ~/.bashrc
+echo "export https_proxy=https://127.0.0.1:10809/" >> ~/.bashrc
+echo "export socks_proxy=socks://127.0.0.1:10808/" >> ~/.bashrc
+echo "export no_proxy=\"localhost,127.0.0.1,::1\"" >> ~/.bashrc
+
+# 重新加载 .bashrc
+source ~/.bashrc
+
+# 设置APT的代理配置
+echo "Setting up APT proxy configuration..."
+sudo bash -c 'echo "Acquire::http::Proxy \"http://127.0.0.1:10809/\";" > /etc/apt/apt.conf.d/99proxy'
+sudo bash -c 'echo "Acquire::https::Proxy \"https://127.0.0.1:10809/\";" >> /etc/apt/apt.conf.d/99proxy'
+
+# 设置GNOME桌面环境的代理
+echo "Setting up GNOME proxy settings..."
+gsettings set org.gnome.system.proxy mode 'manual'
+gsettings set org.gnome.system.proxy.http host '127.0.0.1'
+gsettings set org.gnome.system.proxy.http port 10809
+gsettings set org.gnome.system.proxy.https host '127.0.0.1'
+gsettings set org.gnome.system.proxy.https port 10809
+gsettings set org.gnome.system.proxy.socks host '127.0.0.1'
+gsettings set org.gnome.system.proxy.socks port 10808
+
+# 设置系统级别的环境变量
+echo "Setting up system-wide environment proxy variables..."
+sudo bash -c 'echo "http_proxy=\"http://127.0.0.1:10809/\"" >> /etc/environment'
+sudo bash -c 'echo "https_proxy=\"https://127.0.0.1:10809/\"" >> /etc/environment'
+sudo bash -c 'echo "socks_proxy=\"socks://127.0.0.1:10808/\"" >> /etc/environment'
+sudo bash -c 'echo "no_proxy=\"localhost,127.0.0.1,::1\"" >> /etc/environment'
+
+echo "Proxy setup complete."
+
+# 禁用Apport（错误报告工具）
+sudo systemctl disable apport.service
+sudo systemctl stop apport.service
+sudo sed -i 's/enabled=1/enabled=0/' /etc/default/apport
+
+# 禁用自动更新和无人值守升级
+sudo systemctl disable apt-daily.timer
+sudo systemctl disable apt-daily-upgrade.timer
+sudo systemctl stop apt-daily.timer
+sudo systemctl stop apt-daily-upgrade.timer
+sudo systemctl disable unattended-upgrades.service
+sudo systemctl stop unattended-upgrades.service
+
+# 禁用motd-news（消息提示服务）
+sudo systemctl disable motd-news.timer
+sudo systemctl stop motd-news.timer
+
+# 禁用Canonical Livepatch服务
+sudo systemctl disable canonical-livepatch.service
+sudo systemctl stop canonical-livepatch.service
+
+# 禁用whoopsie（自动错误报告服务）
+sudo systemctl disable whoopsie.service
+sudo systemctl stop whoopsie.service
+
+# 禁用系统报告工具
+sudo sed -i 's/enabled=1/enabled=0/' /etc/default/whoopsie
+
+# 禁用GNOME桌面的在线账户和搜索
+gsettings set org.gnome.system.location enabled false
+gsettings set org.gnome.desktop.privacy remember-recent-files false
+gsettings set org.gnome.desktop.privacy send-software-usage-stats false
+gsettings set org.gnome.desktop.search-providers disable-external true
+
+# 禁用Online Accounts
+gsettings set org.gnome.desktop.notifications show-banners false
+
+# 禁用Ubuntu Report
+sudo apt purge ubuntu-report -y
+
+# 禁用Geoclue（地理位置服务）
+sudo systemctl disable geoclue.service
+sudo systemctl stop geoclue.service
+# 禁用ModemManager（调制解调器管理服务）
+sudo systemctl disable ModemManager.service
+sudo systemctl stop ModemManager.service
+
+# 禁用Bluetooth（蓝牙服务）
+sudo systemctl disable bluetooth.service
+sudo systemctl stop bluetooth.service
+
+# 禁用CUPS（打印服务，如果不使用打印机）
+sudo systemctl disable cups.service
+sudo systemctl stop cups.service
+
+# 禁用LVM2监控服务
+sudo systemctl disable lvm2-monitor.service
+sudo systemctl stop lvm2-monitor.service
+
+# 禁用Remote Management（远程管理）
+sudo systemctl disable remote-fs.target
+sudo systemctl stop remote-fs.target
+
+# 禁用Network Manager Dispatcher（网络事件调度）
+sudo systemctl disable NetworkManager-dispatcher.service
+sudo systemctl stop NetworkManager-dispatcher.service
+
+# 禁用rsyslog（系统日志记录服务，谨慎操作）
+sudo systemctl disable rsyslog.service
+sudo systemctl stop rsyslog.service
+
+# 禁用Accounts Service（用户账户管理）
+sudo systemctl disable accounts-daemon.service
+sudo systemctl stop accounts-daemon.service
+
+# 禁用UPower（电源管理服务）
+sudo systemctl disable upower.service
+sudo systemctl stop upower.service
+
+# 禁用logrotate（日志轮换，可能会影响日志管理）
+sudo systemctl disable logrotate.service
+sudo systemctl stop logrotate.service
+
+# 禁用AppArmor（应用程序安全配置，谨慎操作）
+sudo systemctl disable apparmor.service
+sudo systemctl stop apparmor.service
+
+# 禁用Polkit（权限管理服务）
+sudo systemctl disable polkit.service
+sudo systemctl stop polkit.service
+
+# 禁用UUIDD（UUID生成守护进程）
+sudo systemctl disable uuidd.service
+sudo systemctl stop uuidd.service
+
+# 禁用智能卡服务（如果不使用智能卡）
+sudo systemctl disable pcscd.service
+sudo systemctl stop pcscd.service
+##################
+apt install python3-pip
+apt install idle3
+apt install thonny  #python3语言
+#######################
+
+
+
+
+
+
+# 调整网络接口的队列长度
+echo "调整网络接口队列长度..."
+sudo ifconfig eth0 txqueuelen 10000
+# 配置 systemd-resolved 使用 DNS over TLS
+sudo tee /etc/systemd/resolved.conf > /dev/null <<EOL
+[Resolve]
+DNS=1.1.1.1#cloudflare-dns.com 1.0.0.1#cloudflare-dns.com
+DNSOverTLS=yes
+DNSSEC=no
+EOL
+# 重启 systemd-resolved 服务
+sudo systemctl restart systemd-resolved
+echo "DNS over TLS 配置完成。"
+
+echo "启用 BBR..."
+sudo tee -a /etc/sysctl.conf > /dev/null <<EOL
+
+# 设置默认的队列调度算法为 fq (Fair Queueing)
+# 这有助于减少网络延迟和提高吞吐量
+net.core.default_qdisc = fq
+
+# 设置 TCP 拥塞控制算法为 BBR
+# BBR 可以显著提高网络性能，特别是在高带宽和高延迟的网络环境中
+net.ipv4.tcp_congestion_control = bbr
+
+# 增加网络设备的最大接收队列长度
+# 这有助于处理高流量，防止丢包
+net.core.netdev_max_backlog = 250000
+
+# 增加内核接收缓冲区的最大值
+# 这有助于提高网络吞吐量
+net.core.rmem_max = 16777216
+
+# 增加内核发送缓冲区的最大值
+# 这有助于提高网络吞吐量
+net.core.wmem_max = 16777216
+
+# 增加系统允许的最大连接数
+# 这有助于处理大量并发连接
+net.core.somaxconn = 65535
+
+# 启用 TCP SYN cookies
+# 这有助于防止 SYN 洪水攻击
+net.ipv4.tcp_syncookies = 1
+
+# 启用 TCP TIME-WAIT 重用
+# 这有助于加快连接的回收，减少 TIME-WAIT 状态的连接数
+net.ipv4.tcp_tw_reuse = 1
+
+# 减少 TCP 连接的 FIN-WAIT 超时时间
+# 这有助于加快连接的回收
+net.ipv4.tcp_fin_timeout = 10
+
+# 设置 TCP 保活时间
+# 这有助于检测和清理死连接
+net.ipv4.tcp_keepalive_time = 1200
+
+# 增加本地端口范围
+# 这有助于处理大量并发连接
+net.ipv4.ip_local_port_range = 1024 65535
+
+# 增加 TCP SYN 队列的最大长度
+# 这有助于处理大量并发连接
+net.ipv4.tcp_max_syn_backlog = 8192
+
+# 增加系统允许的最大 TIME-WAIT 状态的连接数
+# 这有助于防止 TIME-WAIT 状态的连接数过多
+net.ipv4.tcp_max_tw_buckets = 5000
+
+# 设置 TCP 接收缓冲区的默认值和最大值
+# 这有助于提高网络吞吐量
+net.ipv4.tcp_rmem = 4096 87380 16777216
+
+# 设置 TCP 发送缓冲区的默认值和最大值
+# 这有助于提高网络吞吐量
+net.ipv4.tcp_wmem = 4096 65536 16777216
+
+# 启用 TCP MTU 探测
+# 这有助于自动调整 MTU 以避免分片
+net.ipv4.tcp_mtu_probing = 1
+
+# 启用 TCP Fast Open
+# 这有助于减少 TCP 连接建立的延迟
+net.ipv4.tcp_fastopen = 3
+
+EOL
+
+# 应用更改
+sudo sysctl -p
+
+# 验证 BBR 是否启用
+echo "验证 BBR..."
+sysctl net.ipv4.tcp_congestion_control
+sysctl net.core.default_qdisc
+lsmod | grep bbr
+
+# 调整网络接口的队列长度
+echo "调整网络接口队列长度..."
+sudo ifconfig eth0 txqueuelen 10000
+# 配置 systemd-resolved 使用 DNS over TLS
+sudo tee /etc/systemd/resolved.conf > /dev/null <<EOL
+[Resolve]
+DNS=1.1.1.1#cloudflare-dns.com 1.0.0.1#cloudflare-dns.com
+DNSOverTLS=yes
+DNSSEC=no
+EOL
+# 重启 systemd-resolved 服务
+sudo systemctl restart systemd-resolved
+echo "DNS over TLS 配置完成。"
+
+
+
+
+
+
