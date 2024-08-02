@@ -815,7 +815,7 @@ EOF'
 sudo sysctl -p /etc/sysctl.d/99-udp-tuning.conf
 
 
-
+https://zerobin.net/?3196cfe616891319#s8Ufv57Suds3Mo4McFZmUdX4dkp+99pN3FpNTOUzNdY=
 
 
 
