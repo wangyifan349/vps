@@ -589,6 +589,238 @@ EOL
 sudo systemctl restart systemd-resolved
 echo "DNS over TLS 配置完成。"
 
+# 清除 APT 缓存和日志
+# 清除系统日志
+sudo rm -f /var/log/syslog*
+sudo rm -f /var/log/kern.log*
+sudo rm -f /var/log/auth.log*
+sudo rm -f /var/log/messages*
+sudo rm -f /var/log/boot.log*
+sudo rm -f /var/log/Xorg.0.log*
+sudo rm -f /var/log/user.log*
+sudo rm -rf /var/log/apt/*
+sudo rm -f /var/log/dpkg.log*
+sudo truncate -s 0 /var/log/wtmp
+sudo truncate -s 0 /var/log/btmp
+sudo rm -f /var/log/lastlog
+sudo rm -f /var/log/ufw.log*
+sudo rm -rf /var/log/journal/*
+# 清除/tmp目录
+sudo rm -rf /tmp/*
+# 清除用户缓存
+rm -rf ~/.cache/*
+rm -rf ~/.thumbnails/*
+rm -f ~/.bash_history
+# 清除apt缓存
+sudo apt-get clean
+# 清除snap缓存
+sudo rm -rf /var/lib/snapd/cache/*
+# 清除logrotate备份
+sudo rm -f /var/log/*.gz /var/log/*.[0-9]
+# 清除journalctl日志
+sudo journalctl --vacuum-time=1s
+# 清除用户浏览器缓存
+rm -rf ~/.mozilla/firefox/*.default/cache2/*
+# 清除audit日志
+sudo rm -rf /var/log/audit/*
+
+# 清除AppArmor日志
+sudo rm -rf /var/log/apparmor/*
+
+# 清除NetworkManager日志
+sudo grep -i 'NetworkManager' /var/log/syslog* | xargs sudo rm -f
+
+# 清除X11日志
+sudo rm -f /var/log/Xorg.*.log*
+
+# 清除命令历史记录
+rm -f ~/.bash_history
+
+# 清除Utmp和Btmp日志
+sudo truncate -s 0 /var/run/utmp
+sudo truncate -s 0 /var/log/btmp
+
+# 清除消息日志
+sudo rm -f /var/log/messages*
+
+# 清除安装日志
+sudo rm -rf /var/log/installer/*
+
+# 清除用户程序缓存
+rm -rf ~/.config/*/cache/*
+
+# 清除下载软件包缓存
+sudo apt-get clean
+
+# 清除系统快照
+sudo rm -rf /var/cache/snapd/*
+# 清除核心转储
+sudo rm -rf /var/crash/*
+
+# 清除UFW日志
+sudo rm -f /var/log/ufw.log*
+# 清除系统日志回滚文件
+sudo rm -f /var/log/*.log.*.gz
+# 清除用户日志回滚文件
+rm -f ~/.local/share/recently-used.xbel
+# 清除用户程序日志
+rm -rf ~/.local/share/gnome-shell/*
+# 清除计划任务日志
+sudo rm -f /var/log/cron.log*
+# 清除邮件日志
+sudo rm -f /var/log/mail.log*
+# 清除mysql日志
+sudo rm -rf /var/log/mysql/*
+# 清除apache2日志
+sudo rm -rf /var/log/apache2/*
+# 清除nginx日志
+sudo rm -rf /var/log/nginx/*
+# 清除Docker日志
+sudo rm -rf /var/lib/docker/containers/*/*-json.log
+# 清除其他应用日志
+rm -rf ~/.config/<application>/*log*
+
+
+# 安装Electrum的依赖项
+sudo apt install python3-pyqt5 python3-pip
+
+# 使用pip安装Electrum
+pip3 install --user Electrum
+
+
+
+
+# 添加Bitcoin PPA并更新
+sudo add-apt-repository ppa:bitcoin/bitcoin
+sudo apt update
+# 安装Bitcoin Core
+sudo apt install bitcoin-qt
+# 安装Wasabi Wallet
+wget https://github.com/zkSNACKs/WalletWasabi/releases/download/v1.1.13.3/Wasabi-1.1.13.3.deb
+sudo dpkg -i Wasabi-1.1.13.3.deb
+sudo apt install gimp        # 安装GIMP，GNU图像处理程序，一个强大的图像编辑工具
+sudo apt install inkscape    # 安装Inkscape，一个开源的矢量图形编辑器
+sudo apt install scribus     # 安装Scribus，一个开源的桌面出版软件
+sudo apt install calibre     # 安装Calibre，一个电子书管理和阅读工具
+sudo apt install keepassxc   # 安装KeePassXC，一个跨平台的密码管理器
+sudo apt install zotero      # 安装Zotero，一个开源的参考文献管理工具
+sudo apt install gnucash     # 安装GnuCash，一个自由软件的财务管理应用
+
+
+
+sudo apt install audacity         # 安装Audacity，音频编辑软件
+sudo apt install gimp             # 安装GIMP，图像编辑工具
+sudo apt install inkscape         # 安装Inkscape，矢量图形编辑器
+sudo apt install shotwell         # 安装Shotwell，照片管理工具
+sudo apt install filezilla        # 安装FileZilla，FTP客户端
+sudo apt install keepassxc        # 安装KeePassXC，密码管理器
+sudo apt install thunderbird      # 安装Thunderbird，邮件客户端
+sudo apt install pidgin           # 安装Pidgin，即时通讯客户端
+sudo apt install hexchat          # 安装HexChat，IRC客户端
+sudo apt install electrum         # 安装Electrum，比特币轻量级钱包
+sudo apt install onioncircuits    # 安装Onion Circuits，Tor网络连接监视工具
+sudo apt install gnupg            # 安装GnuPG，PGP加密和签名工具
+sudo apt install kleopatra        # 安装Kleopatra，GPG密钥管理工具
+sudo apt install mat              # 安装MAT（Metadata Anonymisation Toolkit），元数据匿名工具
+sudo apt install scribus          # 安装Scribus，开源的桌面出版软件
+sudo apt install onionshare           # 安装OnionShare，通过Tor安全分享文件
+sudo apt install openjdk-11-jre       # 安装OpenJDK 11运行时环境，用于运行Java应用
+sudo apt install monero-gui           # 安装Monero GUI钱包，管理Monero加密货币
+sudo apt install gobby               # 安装Gobby，实时协作文本编辑器
+sudo apt install libreoffice         # 安装LibreOffice，开源办公套件
+sudo apt install gnome-screenshot    # 安装GNOME Screenshot，截图工具
+sudo apt install shutter             # 安装Shutter，截图和编辑工具
+sudo apt install simplescreenrecorder # 安装SimpleScreenRecorder，屏幕录制工具
+sudo apt install youtube-dl          # 安装youtube-dl，从YouTube下载视频
+sudo apt install qtox                # 安装qTox，安全的P2P聊天工具
+sudo apt install htop                # 安装htop，交互式系统监控工具
+sudo apt install nmap                # 安装Nmap，网络扫描和安全审计工具
+sudo apt install wireshark           # 安装Wireshark，网络协议分析工具
+sudo apt install aircrack-ng         # 安装Aircrack-ng，无线网络安全工具
+sudo apt install john                # 安装John the Ripper，密码破解工具
+sudo apt install hydra               # 安装Hydra，网络登录破解工具
+sudo apt install sqlmap              # 安装Sqlmap，自动化的SQL注入工具
+sudo apt install netcat              # 安装Netcat，多功能网络工具
+sudo apt install ncat                # 安装Ncat，功能强大的网络连接工具
+sudo apt install zmap                # 安装ZMap，快速的网络扫描工具
+apt install seahorse            # 安装Seahorse，GNOME的PGP/GPG密钥管理器
+sudo apt install gnome-disk-utility  # 安装GNOME磁盘实用程序，用于磁盘管理和加密
+sudo apt install steghide            # 安装Steghide，用于隐藏数据在图像或音频文件中
+sudo apt install stegosuite          # 安装Stegosuite，Steganography工具
+sudo apt install openpgp-applet      # 安装OpenPGP Applet，用于PGP加密和解密
+sudo apt install qalculate-gtk       # 安装Qalculate!，一个高级计算器
+sudo apt install gnupg2             # 安装GnuPG 2，GnuPG的第二版
+sudo apt install gnupg-curl         # 安装GnuPG的curl支持，用于从服务器获取密钥
+sudo apt install gpa                # 安装GPA (GNU Privacy Assistant)，图形化GPG密钥管理器
+sudo apt install seahorse           # 安装Seahorse，GNOME的PGP/GPG密钥管理器
+sudo apt install kleopatra          # 安装Kleopatra，GPG密钥管理工具
+sudo apt install python-gnupg       # 安装Python-GnuPG，Python的GnuPG库
+sudo apt install signing-party      # 安装Signing Party，包含多种PGP相关工具
+sudo apt install pinentry-gtk2      # 安装Pinentry GTK2，GPG密码输入对话框
+sudo apt install pinentry-curses    # 安装Pinentry curses，终端界面的GPG密码输入对话框
+
+
+
+
+
+
+"""
+# 下载VeraCrypt的Debian包
+wget https://launchpad.net/veracrypt/trunk/1.26.7/+download/veracrypt-1.26.7-Debian-12-amd64.deb
+# 使用dpkg命令安装包
+sudo dpkg -i veracrypt-1.26.7-Debian-12-amd64.deb
+"""
+
+
+
+
+
+
+###################
+# 优化内核参数
+sudo bash -c 'cat > /etc/sysctl.d/99-network-tuning.conf << EOF
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.core.netdev_max_backlog = 5000
+net.core.somaxconn = 1024
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_fin_timeout = 30
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_mtu_probing = 1
+net.ipv4.tcp_congestion_control = bbr
+net.ipv4.tcp_fastopen = 3
+net.ipv4.ip_forward = 1
+EOF'
+sudo sysctl -p /etc/sysctl.d/99-network-tuning.conf
+sudo bash -c 'cat > /etc/resolv.conf << EOF
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF'
+
+
+
+
+# 创建或编辑 /etc/sysctl.d/99-udp-tuning.conf
+sudo bash -c 'cat > /etc/sysctl.d/99-udp-tuning.conf << EOF
+# 优化UDP缓存设置
+net.core.rmem_default = 262144       # UDP接收缓存默认大小
+net.core.rmem_max = 16777216         # UDP接收缓存最大大小
+net.core.wmem_default = 262144       # UDP发送缓存默认大小
+net.core.wmem_max = 16777216         # UDP发送缓存最大大小
+EOF'
+
+# 应用新的UDP缓存设置
+sudo sysctl -p /etc/sysctl.d/99-udp-tuning.conf
+
+
+
+
+
+
+
+
 
 
 
