@@ -90,3 +90,22 @@ echo "}"
 echo ""
 echo "完成后，请运行以下命令测试并重启 Nginx："
 echo "sudo nginx -t && sudo systemctl restart nginx"
+
+
+#!/bin/bash
+
+# 定义证书文件路径
+CERT_PATH="/path/to/ec_cert.pem"
+CERT_NAME="ec_cert.crt"
+
+# 将证书复制到系统信任目录
+sudo cp $CERT_PATH /usr/local/share/ca-certificates/$CERT_NAME
+
+# 更新 CA 证书
+sudo update-ca-certificates
+
+# 验证证书是否成功导入
+openssl x509 -in /etc/ssl/certs/$CERT_NAME -text -noout
+
+
+
